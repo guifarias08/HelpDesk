@@ -1,49 +1,154 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const themeToggle = document.getElementById("themeToggle");
-    const description = document.getElementById("description");
-    const characterCount = document.getElementById("characterCount");
-    const menuButton = document.getElementById("menuButton");
-    const mainNav = document.getElementById("mainNav");
+document.addEventListener('DOMContentLoaded', function () {
 
-    if (menuButton && mainNav) {
-        menuButton.addEventListener("click", () => {
-            mainNav.classList.toggle("open");
-        });
+    /*
+    |--------------------------------------------------------------------------
+    | DARK MODE
+    |--------------------------------------------------------------------------
+    */
+
+    const themeToggle =
+        document.getElementById('themeToggle');
+
+
+    function darkModeEnabled() {
+
+        return document.documentElement
+            .classList
+            .contains('dark');
+
     }
 
-    function updateThemeIcon() {
-        if (!themeToggle) return;
 
-        themeToggle.textContent =
-            document.documentElement.classList.contains("dark")
-                ? "☀️"
-                : "🌙";
-    }
+    function updateThemeButton() {
 
-    if (themeToggle) {
-        themeToggle.addEventListener("click", () => {
-            document.documentElement.classList.toggle("dark");
+        if (!themeToggle) {
+            return;
+        }
 
-            const darkEnabled =
-                document.documentElement.classList.contains("dark");
+        if (darkModeEnabled()) {
 
-            localStorage.setItem(
-                "helpdesk-theme",
-                darkEnabled ? "dark" : "light"
+            themeToggle.innerHTML = '☀️';
+
+            themeToggle.setAttribute(
+                'aria-label',
+                'Ativar modo claro'
             );
 
-            updateThemeIcon();
-        });
+        } else {
 
-        updateThemeIcon();
+            themeToggle.innerHTML = '🌙';
+
+            themeToggle.setAttribute(
+                'aria-label',
+                'Ativar modo escuro'
+            );
+
+        }
+
     }
 
-    if (description && characterCount) {
-        const updateCounter = () => {
-            characterCount.textContent = `${description.value.length} caracteres`;
-        };
 
-        description.addEventListener("input", updateCounter);
-        updateCounter();
+    if (themeToggle) {
+
+        themeToggle.addEventListener(
+            'click',
+            function () {
+
+                document.documentElement
+                    .classList
+                    .toggle('dark');
+
+                const theme =
+                    darkModeEnabled()
+                        ? 'dark'
+                        : 'light';
+
+                localStorage.setItem(
+                    'helpdesk-theme',
+                    theme
+                );
+
+                updateThemeButton();
+
+            }
+        );
+
     }
+
+
+    updateThemeButton();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | MENU MOBILE
+    |--------------------------------------------------------------------------
+    */
+
+    const menuButton =
+        document.getElementById('menuButton');
+
+    const mainNav =
+        document.getElementById('mainNav');
+
+
+    if (menuButton && mainNav) {
+
+        menuButton.addEventListener(
+            'click',
+            function () {
+
+                mainNav.classList.toggle('open');
+
+                menuButton.innerHTML =
+                    mainNav.classList.contains('open')
+                        ? '✕'
+                        : '☰';
+
+            }
+        );
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONTADOR DA DESCRIÇÃO
+    |--------------------------------------------------------------------------
+    */
+
+    const description =
+        document.getElementById('description');
+
+    const characterCount =
+        document.getElementById('characterCount');
+
+
+    function updateCharacterCounter() {
+
+        if (
+            !description ||
+            !characterCount
+        ) {
+            return;
+        }
+
+        characterCount.innerText =
+            description.value.length +
+            ' caracteres';
+
+    }
+
+
+    if (description) {
+
+        description.addEventListener(
+            'input',
+            updateCharacterCounter
+        );
+
+        updateCharacterCounter();
+
+    }
+
 });

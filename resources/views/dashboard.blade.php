@@ -23,9 +23,6 @@
                 + Novo chamado
             </a>
 
-            <a href="{{ route('tickets.index') }}" class="btn-outline-light">
-                Ver chamados
-            </a>
         </div>
     </div>
 
