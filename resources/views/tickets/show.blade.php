@@ -1,277 +1,307 @@
 @extends('layouts.app')
 
-@section('title', $ticket->protocol . ' | HelpDesk')
+@section('title', 'Chamado ' . $ticket->protocol . ' | HelpDesk')
 
 @section('content')
 
-<div class="ticket-header">
+<section class="ticket-show-header">
 
-    <a href="{{ route('tickets.index') }}">
-        ← Voltar
-    </a>
+    <div class="ticket-show-header-top">
+        <a
+            href="{{ route('tickets.index') }}"
+            class="back-link"
+        >
+            ← Voltar para chamados
+        </a>
 
-    <span>
-        {{ $ticket->protocol }}
-    </span>
+        <div class="ticket-show-badges">
+            <span class="tag priority-{{ $ticket->priority }}">
+                {{ $ticket->priority_label ?? ucfirst($ticket->priority) }}
+            </span>
 
-    <h1>
-        {{ $ticket->title }}
-    </h1>
+            <span class="tag status-{{ $ticket->status }}">
+                {{ $ticket->status_label ?? ucfirst(str_replace('_', ' ', $ticket->status)) }}
+            </span>
+        </div>
+    </div>
 
-    <p>
-        Aberto por
-        <strong>{{ $ticket->user->name }}</strong>
+    <div class="ticket-show-title-area">
+        <div>
+            <span class="ticket-protocol-large">
+                {{ $ticket->protocol }}
+            </span>
 
-        em
+            <h1 class="ticket-show-title">
+                {{ $ticket->title }}
+            </h1>
 
-        {{ $ticket->created_at->format('d/m/Y H:i') }}
-    </p>
+            <p class="ticket-show-meta">
+                Aberto por
+                <strong>{{ $ticket->user->name ?? 'Usuário' }}</strong>
 
-</div>
+                @if($ticket->category)
+                    • Categoria: <strong>{{ $ticket->category->name }}</strong>
+                @endif
 
-
-<div class="ticket-layout">
-
-
-    <main class="ticket-main">
-
-
-        <section class="ticket-description">
-
-            <h2>Descrição</h2>
-
-            <p>
-                {{ $ticket->description }}
+                • {{ $ticket->created_at->format('d/m/Y H:i') }}
             </p>
+        </div>
+    </div>
 
-        </section>
-
-
-        <section class="conversation">
-
-            <h2>
-                Conversa
-            </h2>
+</section>
 
 
-            @forelse($ticket->comments as $comment)
+<section class="ticket-show-layout">
 
-                <div class="message">
+    <div class="ticket-show-main">
 
-                    <div class="message-avatar">
+        <div class="content-card">
 
-                        {{ strtoupper(
-                            substr(
-                                $comment->user->name,
-                                0,
-                                1
-                            )
-                        ) }}
+            <div class="content-card-header">
+                <h2>Descrição do problema</h2>
+            </div>
 
-                    </div>
+            <div class="description-box">
+                {{ $ticket->description }}
+            </div>
 
-                    <div>
+        </div>
 
-                        <div class="message-header">
 
-                            <strong>
-                                {{ $comment->user->name }}
-                            </strong>
+        <div class="content-card">
 
-                            <span>
-                                {{ $comment->created_at->diffForHumans() }}
-                            </span>
+            <div class="content-card-header">
+                <h2>Conversa</h2>
+                <p>Acompanhe as respostas do chamado.</p>
+            </div>
+
+
+            <div class="comments-list">
+
+                @forelse($ticket->comments as $comment)
+
+                    <div class="comment-item">
+
+                        <div class="comment-avatar">
+                            {{ strtoupper(substr($comment->user->name ?? 'U', 0, 1)) }}
+                        </div>
+
+                        <div class="comment-bubble">
+
+                            <div class="comment-top">
+                                <strong>{{ $comment->user->name ?? 'Usuário' }}</strong>
+                                <span>{{ $comment->created_at->format('d/m/Y H:i') }}</span>
+                            </div>
+
+                            <p>
+                                {{ $comment->message }}
+                            </p>
 
                         </div>
 
-                        <p>
-                            {{ $comment->message }}
-                        </p>
-
                     </div>
 
+                @empty
+
+                    <div class="empty-conversation">
+                        <div class="empty-conversation-icon">💬</div>
+                        <h3>Nenhuma resposta ainda</h3>
+                        <p>Envie a primeira atualização deste chamado.</p>
+                    </div>
+
+                @endforelse
+
+            </div>
+
+
+            <div class="reply-box">
+
+                <form
+                    action="{{ route('tickets.comments.store', $ticket) }}"
+                    method="POST"
+                    class="reply-form"
+                >
+                    @csrf
+
+                    <div class="field">
+                        <label for="message">
+                            Adicionar resposta
+                        </label>
+
+                        <textarea
+                            name="message"
+                            id="message"
+                            rows="5"
+                            placeholder="Escreva sua resposta..."
+                            required
+                        >{{ old('message') }}</textarea>
+
+                        <div class="textarea-meta">
+                            <small>Explique o andamento do atendimento.</small>
+                            <span id="messageCharacterCount">0 caracteres</span>
+                        </div>
+
+                        @error('message')
+                            <span class="error-text">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
+
+                    <div class="reply-actions">
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+                            Enviar resposta
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <aside class="ticket-show-sidebar">
+
+        <div class="content-card sidebar-card">
+
+            <div class="content-card-header">
+                <h2>Resumo do chamado</h2>
+            </div>
+
+            <div class="ticket-summary-list">
+
+                <div class="summary-item">
+                    <span>Protocolo</span>
+                    <strong>{{ $ticket->protocol }}</strong>
                 </div>
 
-            @empty
+                <div class="summary-item">
+                    <span>Status</span>
+                    <strong>{{ $ticket->status_label ?? ucfirst(str_replace('_', ' ', $ticket->status)) }}</strong>
+                </div>
 
-                <p>
-                    Nenhuma resposta ainda.
-                </p>
+                <div class="summary-item">
+                    <span>Prioridade</span>
+                    <strong>{{ $ticket->priority_label ?? ucfirst($ticket->priority) }}</strong>
+                </div>
 
-            @endforelse
+                <div class="summary-item">
+                    <span>Categoria</span>
+                    <strong>{{ $ticket->category->name ?? 'Não informada' }}</strong>
+                </div>
 
+                <div class="summary-item">
+                    <span>Responsável</span>
+                    <strong>{{ $ticket->assignedUser->name ?? 'Não atribuído' }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="content-card sidebar-card">
+
+            <div class="content-card-header">
+                <h2>Atualizar chamado</h2>
+                <p>Altere status, prioridade e responsável.</p>
+            </div>
 
             <form
-                action="{{ route(
-                    'tickets.comments.store',
-                    $ticket
-                ) }}"
+                action="{{ route('tickets.update', $ticket) }}"
                 method="POST"
-                class="reply-form"
+                class="ticket-update-form"
             >
-
                 @csrf
+                @method('PUT')
 
-                <textarea
-                    name="message"
-                    rows="5"
-                    placeholder="Escreva sua resposta..."
-                    required
-                ></textarea>
+                <div class="field">
+                    <label for="status">Status</label>
+                    <select
+                        name="status"
+                        id="status"
+                    >
+                        <option value="open" @selected(old('status', $ticket->status) === 'open')>
+                            Aberto
+                        </option>
+                        <option value="in_progress" @selected(old('status', $ticket->status) === 'in_progress')>
+                            Em atendimento
+                        </option>
+                        <option value="waiting" @selected(old('status', $ticket->status) === 'waiting')>
+                            Aguardando usuário
+                        </option>
+                        <option value="resolved" @selected(old('status', $ticket->status) === 'resolved')>
+                            Resolvido
+                        </option>
+                        <option value="closed" @selected(old('status', $ticket->status) === 'closed')>
+                            Fechado
+                        </option>
+                    </select>
+                </div>
 
-                <button
-                    class="btn-primary"
-                >
-                    Enviar resposta
-                </button>
+                <div class="field">
+                    <label for="priority">Prioridade</label>
+                    <select
+                        name="priority"
+                        id="priority"
+                    >
+                        <option value="low" @selected(old('priority', $ticket->priority) === 'low')>
+                            Baixa
+                        </option>
+                        <option value="normal" @selected(old('priority', $ticket->priority) === 'normal')>
+                            Normal
+                        </option>
+                        <option value="high" @selected(old('priority', $ticket->priority) === 'high')>
+                            Alta
+                        </option>
+                        <option value="urgent" @selected(old('priority', $ticket->priority) === 'urgent')>
+                            Urgente
+                        </option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="assigned_to">Responsável</label>
+                    <select
+                        name="assigned_to"
+                        id="assigned_to"
+                    >
+                        <option value="">
+                            Não atribuído
+                        </option>
+
+                        @foreach($users as $user)
+                            <option
+                                value="{{ $user->id }}"
+                                @selected(old('assigned_to', $ticket->assigned_to) == $user->id)
+                            >
+                                {{ $user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="sidebar-actions">
+                    <button
+                        type="submit"
+                        class="btn-primary"
+                    >
+                        Salvar alterações
+                    </button>
+                </div>
 
             </form>
 
-        </section>
-
-    </main>
-
-
-    <aside class="ticket-sidebar">
-
-        <form
-            action="{{ route(
-                'tickets.update',
-                $ticket
-            ) }}"
-            method="POST"
-        >
-
-            @csrf
-            @method('PUT')
-
-
-            <div class="form-group">
-
-                <label>Status</label>
-
-                <select name="status">
-
-                    <option
-                        value="open"
-                        @selected(
-                            $ticket->status === 'open'
-                        )
-                    >
-                        🟡 Aberto
-                    </option>
-
-                    <option
-                        value="in_progress"
-                        @selected(
-                            $ticket->status === 'in_progress'
-                        )
-                    >
-                        🔵 Em atendimento
-                    </option>
-
-                    <option
-                        value="waiting"
-                        @selected(
-                            $ticket->status === 'waiting'
-                        )
-                    >
-                        🟣 Aguardando usuário
-                    </option>
-
-                    <option
-                        value="resolved"
-                        @selected(
-                            $ticket->status === 'resolved'
-                        )
-                    >
-                        🟢 Resolvido
-                    </option>
-
-                    <option
-                        value="closed"
-                        @selected(
-                            $ticket->status === 'closed'
-                        )
-                    >
-                        ⚫ Fechado
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Prioridade
-                </label>
-
-                <select name="priority">
-
-                    <option value="low">
-                        🟢 Baixa
-                    </option>
-
-                    <option value="normal">
-                        🔵 Normal
-                    </option>
-
-                    <option value="high">
-                        🟠 Alta
-                    </option>
-
-                    <option value="urgent">
-                        🔴 Urgente
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label>
-                    Responsável
-                </label>
-
-                <select name="assigned_to">
-
-                    <option value="">
-                        Não atribuído
-                    </option>
-
-                    @foreach($agents as $agent)
-
-                        <option
-                            value="{{ $agent->id }}"
-                            @selected(
-                                $ticket->assigned_to ===
-                                $agent->id
-                            )
-                        >
-                            {{ $agent->name }}
-                        </option>
-
-                    @endforeach
-
-                </select>
-
-            </div>
-
-
-            <button
-                class="btn-primary"
-            >
-                Atualizar chamado
-            </button>
-
-        </form>
+        </div>
 
     </aside>
 
-</div>
+</section>
 
 @endsection

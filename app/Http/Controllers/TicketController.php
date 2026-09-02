@@ -153,29 +153,21 @@ class TicketController extends Controller
 }
 
 
-    public function show(Ticket $ticket)
+        public function show(Ticket $ticket)
     {
         $ticket->load([
             'user',
             'category',
             'assignedUser',
-            'comments.user'
+            'comments.user',
         ]);
 
-        $agents = User::whereIn(
-            'role',
-            ['agent', 'admin']
-        )
-        ->orderBy('name')
-        ->get();
+        $users = \App\Models\User::orderBy('name')->get();
 
-        return view(
-            'tickets.show',
-            compact(
-                'ticket',
-                'agents'
-            )
-        );
+        return view('tickets.show', compact(
+            'ticket',
+            'users'
+        ));
     }
 
 public function update(Request $request, Ticket $ticket)

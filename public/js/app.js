@@ -150,5 +150,26 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCharacterCounter();
 
     }
+        /*
+|--------------------------------------------------------------------------
+| CONTADOR DA RESPOSTA DO CHAMADO
+|--------------------------------------------------------------------------
+*/
 
+const messageInput = document.getElementById('message');
+const messageCharacterCount = document.getElementById('messageCharacterCount');
+
+function updateMessageCounter() {
+    if (!messageInput || !messageCharacterCount) {
+        return;
+    }
+
+    messageCharacterCount.innerText =
+        messageInput.value.length + ' caracteres';
+}
+
+if (messageInput) {
+    messageInput.addEventListener('input', updateMessageCounter);
+    updateMessageCounter();
+}
 });
