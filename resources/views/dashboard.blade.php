@@ -44,13 +44,7 @@
         </div>
 
 
-        <a
-            href="{{ route('tickets.create') }}"
-            class="btn btn-primary"
-        >
-            <span class="btn-icon">+</span>
-
-            Novo chamado
+  
         </a>
 
     </div>
