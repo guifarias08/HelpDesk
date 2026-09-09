@@ -5,11 +5,15 @@
 @section('content')
 
 
-<section class="page-banner">
+{{-- =====================================================
+     CABEÇALHO
+===================================================== --}}
 
-    <div class="page-banner-content">
+<section class="page-heading page-heading-with-art">
 
-        <span class="page-badge">
+    <div class="page-heading-content">
+
+        <span class="eyebrow">
             CENTRAL DE ATENDIMENTO
         </span>
 
@@ -24,13 +28,28 @@
     </div>
 
 
-    <div class="page-banner-actions">
+    <div class="page-heading-actions">
+
+        <div class="support-art">
+            <div class="support-art-lines">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="support-art-icon">
+                ☎
+            </div>
+        </div>
+
 
         <a
             href="{{ route('tickets.create') }}"
-            class="btn-primary"
+            class="btn btn-primary"
         >
-            + Novo chamado
+            <span class="btn-icon">+</span>
+
+            Novo chamado
         </a>
 
     </div>
@@ -38,27 +57,52 @@
 </section>
 
 
-<section class="filter-panel">
+{{-- =====================================================
+     FILTROS
+===================================================== --}}
+
+<section class="panel filters-panel">
+
+    <div class="panel-title compact">
+
+        <div class="panel-title-icon">
+            ⌕
+        </div>
+
+        <div>
+            <h2>Filtros de busca</h2>
+        </div>
+
+    </div>
+
 
     <form
         action="{{ route('tickets.index') }}"
         method="GET"
-        class="filter-panel-grid"
+        class="filters-grid"
     >
 
-        <div class="field field-search">
+        <div class="field search-field">
 
             <label for="search">
                 Buscar chamado
             </label>
 
-            <input
-                type="text"
-                id="search"
-                name="search"
-                value="{{ request('search') }}"
-                placeholder="Protocolo ou título..."
-            >
+            <div class="control-with-icon">
+
+                <span class="control-icon">
+                    ⌕
+                </span>
+
+                <input
+                    type="text"
+                    id="search"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Protocolo ou título..."
+                >
+
+            </div>
 
         </div>
 
@@ -70,8 +114,8 @@
             </label>
 
             <select
-                name="status"
                 id="status"
+                name="status"
             >
 
                 <option value="">
@@ -125,8 +169,8 @@
             </label>
 
             <select
-                name="priority"
                 id="priority"
+                name="priority"
             >
 
                 <option value="">
@@ -173,8 +217,8 @@
             </label>
 
             <select
-                name="category"
                 id="category"
+                name="category"
             >
 
                 <option value="">
@@ -197,20 +241,20 @@
         </div>
 
 
-        <div class="filter-buttons">
+        <div class="filter-actions">
 
             <button
                 type="submit"
-                class="btn-primary"
+                class="btn btn-primary"
             >
-                Filtrar
+                ⌕ Filtrar
             </button>
 
             <a
                 href="{{ route('tickets.index') }}"
-                class="btn-secondary"
+                class="btn btn-secondary"
             >
-                Limpar
+                ↻ Limpar
             </a>
 
         </div>
@@ -220,129 +264,239 @@
 </section>
 
 
-<section class="list-panel">
+{{-- =====================================================
+     LISTAGEM
+===================================================== --}}
 
-    <div class="list-panel-header">
+<section class="panel tickets-panel">
 
-        <div>
+    <div class="tickets-panel-header">
 
-            <h2>
-                Lista de chamados
-            </h2>
+        <div class="panel-title">
 
-            <p>
-                {{ $tickets->total() }}
-                chamado(s) encontrado(s)
-            </p>
+            <div class="panel-title-icon blue">
+                ☷
+            </div>
 
-        </div>
+            <div>
 
-    </div>
-
-
-    <div class="ticket-cards">
-
-        @forelse($tickets as $ticket)
-
-            <a
-                href="{{ route('tickets.show', $ticket) }}"
-                class="ticket-card"
-            >
-
-                <div class="ticket-card-left">
-
-                    <div class="ticket-card-icon">
-                        🎫
-                    </div>
-
-
-                    <div class="ticket-card-info">
-
-                        <span class="ticket-code">
-                            {{ $ticket->protocol }}
-                        </span>
-
-                        <h3>
-                            {{ $ticket->title }}
-                        </h3>
-
-                        <p>
-
-                            {{ $ticket->user->name ?? 'Usuário' }}
-
-                            @if($ticket->category)
-
-                                • {{ $ticket->category->name }}
-
-                            @endif
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="ticket-card-right">
-
-                    <span class="tag priority-{{ $ticket->priority }}">
-                        {{ $ticket->priority_label }}
-                    </span>
-
-                    <span class="tag status-{{ $ticket->status }}">
-                        {{ $ticket->status_label }}
-                    </span>
-
-                    <span class="ticket-date">
-                        {{ $ticket->created_at->format('d/m/Y') }}
-                    </span>
-
-                    <span class="ticket-arrow">
-                        →
-                    </span>
-
-                </div>
-
-            </a>
-
-        @empty
-
-            <div class="empty-box">
-
-                <div class="empty-box-icon">
-                    📭
-                </div>
-
-                <h3>
-                    Nenhum chamado encontrado
-                </h3>
+                <h2>
+                    Lista de chamados
+                </h2>
 
                 <p>
-                    Nenhum chamado corresponde aos filtros selecionados.
+                    {{ $tickets->total() }}
+                    chamado(s) encontrado(s)
                 </p>
-
-                <a
-                    href="{{ route('tickets.create') }}"
-                    class="btn-primary"
-                >
-                    + Criar chamado
-                </a>
 
             </div>
 
-        @endforelse
+        </div>
+
+
+        <div class="sort-box">
+
+            <span>
+                Ordenar por
+            </span>
+
+            <select>
+                <option>
+                    Mais recentes
+                </option>
+            </select>
+
+        </div>
 
     </div>
 
 
-    @if($tickets->hasPages())
+    <div class="tickets-table-wrapper">
 
-        <div class="pagination-box">
-            {{ $tickets->links() }}
-        </div>
+        <table class="tickets-table">
 
-    @endif
+            <thead>
+
+                <tr>
+                    <th>Protocolo</th>
+                    <th>Título</th>
+                    <th>Solicitante • Categoria</th>
+                    <th>Data</th>
+                    <th>Prioridade</th>
+                    <th>Status</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                @forelse($tickets as $ticket)
+
+                    <tr
+                        onclick="window.location='{{ route('tickets.show', $ticket) }}'"
+                    >
+
+                        <td>
+
+                            <div class="protocol-cell">
+
+                                <span class="protocol-icon">
+                                    ▣
+                                </span>
+
+                                <strong>
+                                    {{ $ticket->protocol }}
+                                </strong>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong class="ticket-title">
+                                {{ $ticket->title }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="ticket-requester">
+
+                                {{ $ticket->user->name ?? 'Usuário' }}
+
+                                @if($ticket->category)
+
+                                    <span class="dot">•</span>
+
+                                    {{ $ticket->category->name }}
+
+                                @endif
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="date-cell">
+                                <span>▣</span>
+
+                                {{ $ticket->created_at->format('d/m/Y') }}
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge priority-{{ $ticket->priority }}">
+                                {{ $ticket->priority_label }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="badge status-{{ $ticket->status }}">
+
+                                <span class="badge-dot"></span>
+
+                                {{ $ticket->status_label }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td class="text-center">
+
+                            <a
+                                href="{{ route('tickets.show', $ticket) }}"
+                                class="row-action"
+                                onclick="event.stopPropagation()"
+                            >
+                                ⋮
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="no-tickets-cell"
+                        >
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    ☷
+                                </div>
+
+                                <h3>
+                                    Nenhum chamado encontrado
+                                </h3>
+
+                                <p>
+                                    Nenhum chamado corresponde aos filtros selecionados.
+                                </p>
+
+                                <a
+                                    href="{{ route('tickets.create') }}"
+                                    class="btn btn-primary"
+                                >
+                                    + Criar chamado
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="tickets-footer">
+
+        <span>
+            Mostrando
+            {{ $tickets->count() }}
+            de
+            {{ $tickets->total() }}
+            chamados
+        </span>
+
+
+        @if($tickets->hasPages())
+
+            <div class="pagination-wrapper">
+                {{ $tickets->links() }}
+            </div>
+
+        @endif
+
+    </div>
 
 </section>
+
 
 @endsection

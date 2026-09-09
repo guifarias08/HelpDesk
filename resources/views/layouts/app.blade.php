@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,69 +8,50 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        @yield('title', 'HelpDesk')
-    </title>
+    <title>@yield('title', 'HelpDesk')</title>
 
-
+    {{-- Carrega o tema antes da página aparecer --}}
     <script>
         (function () {
+            const savedTheme = localStorage.getItem('helpdesk-theme');
 
-            const savedTheme =
-                localStorage.getItem('helpdesk-theme');
-
-            if (savedTheme === 'dark') {
-
-                document.documentElement
-                    .classList
-                    .add('dark');
-
+            if (savedTheme === 'light') {
+                document.documentElement.classList.add('light');
             }
-
         })();
     </script>
 
-
     <link
         rel="stylesheet"
-        href="{{ asset('css/app.css') }}"
+        href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}"
     >
-
 </head>
-
 
 <body>
 
+<header class="topbar">
 
-<header class="app-header">
+    <div class="topbar-inner">
 
-    <div class="header-container">
-
-
+        {{-- LOGO --}}
         <a
             href="{{ route('dashboard') }}"
             class="brand"
         >
-
-            <div class="brand-symbol">
+            <div class="brand-logo">
                 H
             </div>
 
-            <div class="brand-name">
-
-                HelpDesk
-
-                <small>
-                    Service Center
-                </small>
-
+            <div class="brand-text">
+                <strong>HelpDesk</strong>
+                <span>Service Center</span>
             </div>
-
         </a>
 
 
+        {{-- NAVEGAÇÃO --}}
         <nav
-            class="desktop-nav"
+            class="main-nav"
             id="mainNav"
         >
 
@@ -83,14 +62,12 @@
                 Dashboard
             </a>
 
-
             <a
                 href="{{ route('tickets.index') }}"
                 class="{{ request()->routeIs('tickets.index') || request()->routeIs('tickets.show') ? 'active' : '' }}"
             >
                 Chamados
             </a>
-
 
             <a
                 href="{{ route('tickets.create') }}"
@@ -102,37 +79,29 @@
         </nav>
 
 
-        <div class="header-actions">
-
+        {{-- AÇÕES --}}
+        <div class="topbar-actions">
 
             <button
                 type="button"
                 id="themeToggle"
-                class="icon-button"
-                onclick="toggleTheme()"
+                class="theme-toggle"
                 aria-label="Alternar tema"
             >
-                ◐
+                ☀
             </button>
 
+            <div class="topbar-divider"></div>
 
-            <div class="profile-button">
+            <div class="profile">
 
                 <div class="profile-avatar">
                     AD
                 </div>
 
-
                 <div class="profile-info">
-
-                    <strong>
-                        Administrador
-                    </strong>
-
-                    <span>
-                        Admin
-                    </span>
-
+                    <strong>Administrador</strong>
+                    <span>Admin</span>
                 </div>
 
             </div>
@@ -140,34 +109,53 @@
         </div>
 
 
+        {{-- MOBILE --}}
         <button
             type="button"
             id="menuButton"
-            class="mobile-menu-button"
+            class="menu-button"
+            aria-label="Abrir menu"
         >
             ☰
         </button>
-
 
     </div>
 
 </header>
 
 
-<main class="page-container">
-
+<main class="app-shell">
 
     @if(session('success'))
 
         <div class="alert alert-success">
 
-            <strong>
-                Sucesso
-            </strong>
+            <div class="alert-icon">
+                ✓
+            </div>
 
-            <span>
-                {{ session('success') }}
-            </span>
+            <div>
+                <strong>Sucesso</strong>
+                <p>{{ session('success') }}</p>
+            </div>
+
+        </div>
+
+    @endif
+
+
+    @if(session('error'))
+
+        <div class="alert alert-error">
+
+            <div class="alert-icon">
+                !
+            </div>
+
+            <div>
+                <strong>Erro</strong>
+                <p>{{ session('error') }}</p>
+            </div>
 
         </div>
 
@@ -178,17 +166,23 @@
 
         <div class="alert alert-error">
 
-            <strong>
-                Verifique os dados informados.
-            </strong>
+            <div class="alert-icon">
+                !
+            </div>
 
-            @foreach($errors->all() as $error)
+            <div>
 
-                <span>
-                    {{ $error }}
-                </span>
+                <strong>
+                    Verifique os campos informados
+                </strong>
 
-            @endforeach
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+
+            </div>
 
         </div>
 
@@ -197,76 +191,12 @@
 
     @yield('content')
 
-
 </main>
 
 
-<script src="{{ asset('js/app.js') }}"></script>
-
-
-<script>
-
-    function toggleTheme() {
-
-        const html =
-            document.documentElement;
-
-
-        html.classList.toggle('dark');
-
-
-        const isDark =
-            html.classList.contains('dark');
-
-
-        localStorage.setItem(
-            'helpdesk-theme',
-            isDark ? 'dark' : 'light'
-        );
-
-
-        updateThemeButton();
-
-    }
-
-
-    function updateThemeButton() {
-
-        const button =
-            document.getElementById('themeToggle');
-
-
-        if (!button) {
-            return;
-        }
-
-
-        const isDark =
-            document.documentElement
-                .classList
-                .contains('dark');
-
-
-        button.textContent =
-            isDark
-                ? '☀'
-                : '◐';
-
-    }
-
-
-    document.addEventListener(
-        'DOMContentLoaded',
-        function () {
-
-            updateThemeButton();
-
-        }
-    );
-
-</script>
-
+<script
+    src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}"
+></script>
 
 </body>
-
 </html>
