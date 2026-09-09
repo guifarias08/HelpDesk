@@ -1,82 +1,115 @@
-@import url(
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
-);
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 
-/* ============================================
-   VARIÁVEIS - LIGHT MODE
-============================================ */
+/* =========================================
+   LIGHT MODE
+========================================= */
 
 :root {
 
-    --background: #f3f7fb;
+    --bg: #f5f6f8;
 
     --surface: #ffffff;
 
-    --surface-soft: #f8fafc;
+    --surface-secondary: #f8fafc;
 
-    --surface-hover: #f5fafb;
+    --surface-hover: #f4f6f8;
 
-    --text: #15243a;
+    --text: #111827;
 
-    --muted: #6f8097;
+    --text-secondary: #667085;
 
-    --border: #e1e8f0;
+    --text-muted: #98a2b3;
 
-    --primary: #16b8a6;
+    --border: #e4e7ec;
 
-    --primary-dark: #0d9488;
+    --border-strong: #d0d5dd;
 
-    --primary-soft: #e6faf7;
+    --primary: #1f4fd6;
 
-    --input-background: #f8fafc;
+    --primary-hover: #173faf;
+
+    --primary-soft: #eef3ff;
+
+    --danger: #b42318;
+
+    --danger-soft: #fef3f2;
+
+    --success: #027a48;
+
+    --success-soft: #ecfdf3;
+
+    --warning: #b54708;
+
+    --warning-soft: #fffaeb;
+
+    --purple: #6941c6;
+
+    --purple-soft: #f4f3ff;
 
     --shadow:
-        0 16px 45px
-        rgba(30, 52, 78, 0.08);
+        0 1px 2px rgba(16,24,40,.04),
+        0 7px 20px rgba(16,24,40,.05);
 
 }
 
 
-/* ============================================
+/* =========================================
    DARK MODE
-============================================ */
+========================================= */
 
 html.dark {
 
-    --background: #07111f;
+    --bg: #0c1117;
 
-    --surface: #0f1c2e;
+    --surface: #131a22;
 
-    --surface-soft: #14233a;
+    --surface-secondary: #18212b;
 
-    --surface-hover: #162940;
+    --surface-hover: #1c2631;
 
-    --text: #eef5ff;
+    --text: #f4f6f8;
 
-    --muted: #94a6be;
+    --text-secondary: #a5b0bf;
 
-    --border: #263851;
+    --text-muted: #748092;
 
-    --primary: #2dd4bf;
+    --border: #26313d;
 
-    --primary-dark: #5eead4;
+    --border-strong: #344150;
 
-    --primary-soft:
-        rgba(45, 212, 191, 0.12);
+    --primary: #668cff;
 
-    --input-background: #0b1728;
+    --primary-hover: #84a2ff;
+
+    --primary-soft: rgba(102,140,255,.12);
+
+    --danger: #f97066;
+
+    --danger-soft: rgba(249,112,102,.10);
+
+    --success: #47cd89;
+
+    --success-soft: rgba(71,205,137,.10);
+
+    --warning: #fdb022;
+
+    --warning-soft: rgba(253,176,34,.10);
+
+    --purple: #b692f6;
+
+    --purple-soft: rgba(182,146,246,.10);
 
     --shadow:
-        0 18px 50px
-        rgba(0, 0, 0, 0.24);
+        0 1px 2px rgba(0,0,0,.2),
+        0 8px 24px rgba(0,0,0,.16);
 
 }
 
 
-/* ============================================
+/* =========================================
    RESET
-============================================ */
+========================================= */
 
 * {
 
@@ -84,11 +117,13 @@ html.dark {
 
 }
 
+
 html {
 
     scroll-behavior: smooth;
 
 }
+
 
 body {
 
@@ -96,42 +131,51 @@ body {
 
     min-height: 100vh;
 
-    font-family:
-        'Inter',
-        Arial,
-        sans-serif;
-
-    background: var(--background);
+    background: var(--bg);
 
     color: var(--text);
 
+    font-family:
+        "Inter",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    font-size: 14px;
+
     transition:
-        background-color .25s ease,
-        color .25s ease;
+        background-color .2s ease,
+        color .2s ease;
 
 }
+
 
 a {
 
     text-decoration: none;
 
+    color: inherit;
+
 }
+
 
 button,
 input,
 select,
 textarea {
 
-    font-family: inherit;
+    font: inherit;
 
 }
 
 
-/* ============================================
-   NAVBAR
-============================================ */
+/* =========================================
+   HEADER
+========================================= */
 
-.topbar {
+.app-header {
 
     position: sticky;
 
@@ -139,32 +183,23 @@ textarea {
 
     z-index: 1000;
 
-    height: 76px;
+    height: 72px;
 
-    background:
-        rgba(255, 255, 255, 0.95);
+    background: var(--surface);
 
-    border-bottom:
-        1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 
-    backdrop-filter:
-        blur(16px);
+    box-shadow:
+        0 1px 4px rgba(16,24,40,.03);
 
     transition:
-        background-color .25s ease;
+        background-color .2s ease,
+        border-color .2s ease;
 
 }
 
 
-html.dark .topbar {
-
-    background:
-        rgba(10, 19, 33, 0.95);
-
-}
-
-
-.topbar-container {
+.header-container {
 
     width:
         min(
@@ -180,10 +215,14 @@ html.dark .topbar {
 
     align-items: center;
 
-    gap: 30px;
+    gap: 34px;
 
 }
 
+
+/* =========================================
+   BRAND
+========================================= */
 
 .brand {
 
@@ -191,110 +230,127 @@ html.dark .topbar {
 
     align-items: center;
 
-    gap: 11px;
+    gap: 10px;
 
-    color: var(--text);
-
-    font-size: 21px;
-
-    font-weight: 800;
+    flex-shrink: 0;
 
 }
 
 
-.brand > span > span {
+.brand-symbol {
 
-    color: var(--primary);
+    width: 38px;
 
-}
-
-
-.brand-icon {
-
-    width: 42px;
-
-    height: 42px;
+    height: 38px;
 
     display: grid;
 
     place-items: center;
 
-    border-radius: 12px;
+    border-radius: 10px;
 
-    background:
-        linear-gradient(
-            135deg,
-            #14b8a6,
-            #0ea5e9
-        );
+    background: var(--text);
 
-    color: white;
+    color: var(--surface);
 
-    font-size: 18px;
+    font-size: 16px;
 
-    font-weight: 800;
-
-    box-shadow:
-        0 8px 22px
-        rgba(20, 184, 166, .25);
+    font-weight: 700;
 
 }
 
 
-.main-nav {
+.brand-name {
 
-    margin-left: auto;
+    display: flex;
+
+    flex-direction: column;
+
+    color: var(--text);
+
+    font-weight: 700;
+
+    line-height: 1.1;
+
+}
+
+
+.brand-name small {
+
+    margin-top: 4px;
+
+    color: var(--text-muted);
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    letter-spacing: .09em;
+
+    text-transform: uppercase;
+
+}
+
+
+/* =========================================
+   NAV
+========================================= */
+
+.desktop-nav {
+
+    margin-right: auto;
 
     display: flex;
 
     align-items: center;
 
-    gap: 5px;
+    gap: 4px;
 
 }
 
 
-.main-nav a {
+.desktop-nav a {
 
-    padding:
-        10px 14px;
+    padding: 9px 13px;
 
-    border-radius: 10px;
+    border-radius: 8px;
 
-    color: var(--muted);
+    color: var(--text-secondary);
 
     font-size: 13px;
 
+    font-weight: 500;
+
+    transition: .15s;
+
+}
+
+
+.desktop-nav a:hover {
+
+    background: var(--surface-secondary);
+
+    color: var(--text);
+
+}
+
+
+.desktop-nav a.active {
+
+    background: var(--primary-soft);
+
+    color: var(--primary);
+
     font-weight: 600;
 
-    transition: .2s;
-
 }
 
 
-.main-nav a:hover {
+/* =========================================
+   HEADER ACTIONS
+========================================= */
 
-    background:
-        var(--primary-soft);
-
-    color:
-        var(--primary-dark);
-
-}
-
-
-.main-nav a.active {
-
-    background:
-        var(--primary-soft);
-
-    color:
-        var(--primary-dark);
-
-}
-
-
-.topbar-actions {
+.header-actions {
 
     display: flex;
 
@@ -305,52 +361,60 @@ html.dark .topbar {
 }
 
 
-.theme-toggle {
+.icon-button {
 
-    width: 41px;
+    width: 38px;
 
-    height: 41px;
+    height: 38px;
 
     display: grid;
 
     place-items: center;
 
-    border:
-        1px solid var(--border);
+    border: 1px solid var(--border);
 
-    border-radius: 11px;
+    border-radius: 9px;
 
-    background:
-        var(--surface);
+    background: var(--surface);
 
-    color:
-        var(--text);
+    color: var(--text-secondary);
 
     cursor: pointer;
 
-    font-size: 17px;
+    font-size: 16px;
 
-    transition: .2s;
-
-}
-
-
-.theme-toggle:hover {
-
-    transform:
-        translateY(-2px);
-
-    background:
-        var(--surface-soft);
+    transition: .15s;
 
 }
 
 
-.user-avatar {
+.icon-button:hover {
 
-    width: 41px;
+    color: var(--text);
 
-    height: 41px;
+    background: var(--surface-secondary);
+
+}
+
+
+.profile-button {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding-left: 5px;
+
+}
+
+
+.profile-avatar {
+
+    width: 36px;
+
+    height: 36px;
 
     display: grid;
 
@@ -358,55 +422,62 @@ html.dark .topbar {
 
     border-radius: 50%;
 
-    background:
-        #15243a;
+    background: var(--surface-secondary);
 
-    color: white;
+    border: 1px solid var(--border);
+
+    color: var(--text);
 
     font-size: 11px;
 
-    font-weight: 800;
+    font-weight: 700;
 
 }
 
 
-html.dark .user-avatar {
+.profile-info {
 
-    background:
-        #263851;
+    display: flex;
+
+    flex-direction: column;
 
 }
 
 
-.menu-button {
+.profile-info strong {
+
+    color: var(--text);
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+}
+
+
+.profile-info span {
+
+    margin-top: 2px;
+
+    color: var(--text-muted);
+
+    font-size: 9px;
+
+}
+
+
+.mobile-menu-button {
 
     display: none;
 
-    width: 41px;
-
-    height: 41px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 10px;
-
-    background:
-        var(--surface);
-
-    color:
-        var(--text);
-
-    cursor: pointer;
-
 }
 
 
-/* ============================================
-   CONTAINER
-============================================ */
+/* =========================================
+   PAGE CONTAINER
+========================================= */
 
-.app-container {
+.page-container {
 
     width:
         min(
@@ -414,295 +485,136 @@ html.dark .user-avatar {
             calc(100% - 40px)
         );
 
-    margin:
-        0 auto;
+    margin: 0 auto;
 
-    padding:
-        34px 0 70px;
+    padding: 34px 0 64px;
 
 }
 
 
-/* ============================================
-   HERO DASHBOARD
-============================================ */
+/* =========================================
+   PAGE HEADER
+========================================= */
 
-.hero-dashboard {
-
-    min-height: 410px;
-
-    display: grid;
-
-    grid-template-columns:
-        .95fr 1.05fr;
-
-    gap: 45px;
-
-    align-items: center;
-
-    margin-bottom: 28px;
-
-    padding: 50px;
-
-    position: relative;
-
-    overflow: hidden;
-
-    border-radius: 27px;
-
-    background:
-        radial-gradient(
-            circle at 88% 10%,
-            rgba(45, 212, 191, .35),
-            transparent 28%
-        ),
-        linear-gradient(
-            125deg,
-            #14314c,
-            #0b5a6b,
-            #18b8a6
-        );
-
-    box-shadow:
-        0 22px 55px
-        rgba(23, 59, 81, .16);
-
-}
-
-
-.hero-content {
-
-    position: relative;
-
-    z-index: 2;
-
-}
-
-
-.hero-badge,
-.page-badge {
-
-    display:
-        inline-flex;
-
-    padding:
-        7px 12px;
-
-    margin-bottom:
-        15px;
-
-    border-radius:
-        999px;
-
-    background:
-        rgba(255,255,255,.12);
-
-    color:
-        #eafffb;
-
-    font-size:
-        11px;
-
-    font-weight:
-        800;
-
-    letter-spacing:
-        .12em;
-
-}
-
-
-.hero-title {
-
-    margin:
-        0 0 17px;
-
-    color:
-        white;
-
-    font-size:
-        clamp(
-            38px,
-            5vw,
-            58px
-        );
-
-    line-height:
-        1.05;
-
-    letter-spacing:
-        -2px;
-
-}
-
-
-.hero-text {
-
-    max-width:
-        530px;
-
-    margin:
-        0 0 26px;
-
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            .82
-        );
-
-    line-height:
-        1.7;
-
-}
-
-
-.hero-actions {
+.page-header {
 
     display: flex;
 
-    gap: 11px;
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    gap: 24px;
+
+    margin-bottom: 26px;
 
 }
 
 
-/* ============================================
-   BOTÕES
-============================================ */
+.page-heading small {
 
-.btn-primary,
-.btn-secondary,
-.btn-outline {
+    display: block;
 
-    min-height:
-        45px;
+    margin-bottom: 8px;
 
-    display:
-        inline-flex;
+    color: var(--text-muted);
 
-    align-items:
-        center;
+    font-size: 10px;
 
-    justify-content:
-        center;
+    font-weight: 600;
 
-    padding:
-        0 18px;
+    letter-spacing: .09em;
 
-    border-radius:
-        11px;
+    text-transform: uppercase;
+
+}
+
+
+.page-heading h1 {
+
+    margin: 0;
+
+    color: var(--text);
 
     font-size:
-        12px;
+        clamp(
+            30px,
+            4vw,
+            40px
+        );
 
-    font-weight:
-        700;
+    font-weight: 600;
 
-    transition:
-        .2s;
+    letter-spacing: -.04em;
 
 }
 
+
+.page-heading p {
+
+    max-width: 720px;
+
+    margin: 8px 0 0;
+
+    color: var(--text-secondary);
+
+    line-height: 1.6;
+
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
 
 .btn-primary {
 
-    border: none;
+    min-height: 42px;
 
-    background:
-        var(--primary);
+    display: inline-flex;
 
-    color:
-        white;
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0 16px;
+
+    border: 1px solid var(--primary);
+
+    border-radius: 9px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    font-weight: 600;
 
     cursor: pointer;
 
     box-shadow:
-        0 9px 24px
-        rgba(
-            20,
-            184,
-            166,
-            .22
-        );
+        0 1px 2px rgba(16,24,40,.10);
+
+    transition: .15s;
 
 }
 
 
 .btn-primary:hover {
 
-    transform:
-        translateY(-2px);
+    background: var(--primary-hover);
 
-    background:
-        var(--primary-dark);
+    border-color: var(--primary-hover);
 
-}
-
-
-.btn-secondary {
-
-    border:
-        1px solid var(--border);
-
-    background:
-        var(--surface);
-
-    color:
-        var(--text);
+    transform: translateY(-1px);
 
 }
 
 
-.btn-secondary:hover {
-
-    background:
-        var(--surface-soft);
-
-}
-
-
-.btn-outline {
-
-    border:
-        1px solid
-        rgba(
-            255,
-            255,
-            255,
-            .28
-        );
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            .08
-        );
-
-    color:
-        white;
-
-}
-
-
-.btn-outline:hover {
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            .16
-        );
-
-}
-
-
-/* ============================================
-   DASHBOARD CARDS
-============================================ */
+/* =========================================
+   STATS
+========================================= */
 
 .stats-grid-modern {
 
@@ -711,943 +623,57 @@ html.dark .user-avatar {
     grid-template-columns:
         repeat(
             4,
-            1fr
+            minmax(0, 1fr)
         );
 
-    gap: 18px;
+    gap: 16px;
 
-    margin-bottom:
-        28px;
+    margin-bottom: 24px;
 
 }
 
 
 .stat-modern {
 
-    min-height:
-        110px;
+    min-height: 126px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    padding: 20px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    box-shadow: var(--shadow);
+
+    overflow: hidden;
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease;
+
+}
+
+
+.stat-modern-top {
 
     display: flex;
 
     align-items: center;
 
-    gap: 16px;
-
-    padding: 20px;
-
-    background:
-        var(--surface);
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        18px;
-
-    box-shadow:
-        var(--shadow);
+    gap: 10px;
 
 }
 
 
 .stat-modern-icon {
-
-    width: 52px;
-
-    height: 52px;
-
-    display: grid;
-
-    place-items: center;
-
-    border-radius:
-        14px;
-
-    background:
-        var(--surface-soft);
-
-}
-
-
-.stat-modern span {
-
-    display: block;
-
-    margin-bottom: 5px;
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-}
-
-
-.stat-modern strong {
-
-    color:
-        var(--text);
-
-    font-size:
-        27px;
-
-}
-
-
-/* ============================================
-   PAINEL DASHBOARD
-============================================ */
-
-.modern-panel {
-
-    background:
-        var(--surface);
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        20px;
-
-    overflow: hidden;
-
-    box-shadow:
-        var(--shadow);
-
-}
-
-
-.modern-panel-header {
-
-    padding:
-        23px 26px;
-
-    display: flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
-
-    border-bottom:
-        1px solid var(--border);
-
-}
-
-
-.modern-panel-header h2 {
-
-    margin:
-        0 0 5px;
-
-    color:
-        var(--text);
-
-}
-
-
-.modern-panel-header p {
-
-    margin: 0;
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-}
-
-
-.panel-link {
-
-    color:
-        var(--primary-dark);
-
-    font-weight:
-        700;
-
-    font-size:
-        12px;
-
-}
-
-
-.modern-ticket-row {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content:
-        space-between;
-
-    gap: 20px;
-
-    padding:
-        21px 26px;
-
-    border-bottom:
-        1px solid var(--border);
-
-}
-
-
-.modern-ticket-row:hover {
-
-    background:
-        var(--surface-hover);
-
-}
-
-
-.modern-ticket-main h3 {
-
-    margin:
-        4px 0;
-
-    color:
-        var(--text);
-
-}
-
-
-.modern-ticket-main p {
-
-    margin: 0;
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-}
-
-
-/* ============================================
-   PÁGINAS INTERNAS
-============================================ */
-
-.page-banner {
-
-    min-height:
-        195px;
-
-    display: flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
-
-    gap: 25px;
-
-    padding:
-        34px 38px;
-
-    margin-bottom:
-        24px;
-
-    border-radius:
-        24px;
-
-    background:
-        radial-gradient(
-            circle at top right,
-            rgba(
-                45,
-                212,
-                191,
-                .28
-            ),
-            transparent 32%
-        ),
-        linear-gradient(
-            135deg,
-            #14314c,
-            #0b5f6d,
-            #19b8aa
-        );
-
-    box-shadow:
-        0 18px 48px
-        rgba(
-            20,
-            60,
-            80,
-            .14
-        );
-
-}
-
-
-.page-banner h1 {
-
-    margin:
-        0 0 9px;
-
-    color:
-        white;
-
-    font-size:
-        clamp(
-            34px,
-            4vw,
-            48px
-        );
-
-    letter-spacing:
-        -1.5px;
-
-}
-
-
-.page-banner p {
-
-    max-width:
-        600px;
-
-    margin: 0;
-
-    color:
-        rgba(
-            255,
-            255,
-            255,
-            .82
-        );
-
-    line-height:
-        1.6;
-
-}
-
-
-/* ============================================
-   FILTROS
-============================================ */
-
-.filter-panel {
-
-    margin-bottom:
-        24px;
-
-    padding:
-        21px;
-
-    background:
-        var(--surface);
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        18px;
-
-    box-shadow:
-        var(--shadow);
-
-}
-
-
-.filter-panel-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        2fr
-        1fr
-        1fr
-        1fr
-        auto;
-
-    gap: 13px;
-
-    align-items:
-        end;
-
-}
-
-
-.field {
-
-    display: flex;
-
-    flex-direction:
-        column;
-
-    gap: 7px;
-
-}
-
-
-.field label {
-
-    color:
-        var(--text);
-
-    font-size:
-        12px;
-
-    font-weight:
-        700;
-
-}
-
-
-.field input,
-.field select,
-.field textarea {
-
-    width: 100%;
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        11px;
-
-    outline: none;
-
-    background:
-        var(--input-background);
-
-    color:
-        var(--text);
-
-    transition:
-        .2s;
-
-}
-
-
-.field input,
-.field select {
-
-    height:
-        45px;
-
-    padding:
-        0 13px;
-
-}
-
-
-.field textarea {
-
-    padding:
-        14px;
-
-    line-height:
-        1.6;
-
-    resize:
-        vertical;
-
-}
-
-
-.field input:focus,
-.field select:focus,
-.field textarea:focus {
-
-    border-color:
-        var(--primary);
-
-    box-shadow:
-        0 0 0 3px
-        rgba(
-            20,
-            184,
-            166,
-            .11
-        );
-
-}
-
-
-.filter-buttons {
-
-    display: flex;
-
-    gap: 8px;
-
-}
-
-
-/* ============================================
-   LISTA CHAMADOS
-============================================ */
-
-.list-panel {
-
-    background:
-        var(--surface);
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        20px;
-
-    overflow: hidden;
-
-    box-shadow:
-        var(--shadow);
-
-}
-
-
-.list-panel-header {
-
-    padding:
-        23px 25px;
-
-    border-bottom:
-        1px solid var(--border);
-
-}
-
-
-.list-panel-header h2 {
-
-    margin:
-        0 0 5px;
-
-    color:
-        var(--text);
-
-    font-size:
-        21px;
-
-}
-
-
-.list-panel-header p {
-
-    margin: 0;
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-}
-
-
-.ticket-card {
-
-    display: flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    gap: 20px;
-
-    padding:
-        22px 25px;
-
-    color:
-        var(--text);
-
-    border-bottom:
-        1px solid var(--border);
-
-    transition:
-        .2s;
-
-}
-
-
-.ticket-card:hover {
-
-    background:
-        var(--surface-hover);
-
-}
-
-
-.ticket-card:last-child {
-
-    border-bottom:
-        none;
-
-}
-
-
-.ticket-card-left {
-
-    display: flex;
-
-    align-items:
-        center;
-
-    gap: 15px;
-
-}
-
-
-.ticket-card-icon {
-
-    width: 50px;
-
-    height: 50px;
-
-    display: grid;
-
-    place-items: center;
-
-    flex-shrink: 0;
-
-    border-radius:
-        14px;
-
-    background:
-        var(--primary-soft);
-
-}
-
-
-.ticket-code {
-
-    color:
-        var(--primary-dark);
-
-    font-size:
-        11px;
-
-    font-weight:
-        800;
-
-}
-
-
-.ticket-card-info h3 {
-
-    margin:
-        5px 0;
-
-    color:
-        var(--text);
-
-    font-size:
-        16px;
-
-}
-
-
-.ticket-card-info p {
-
-    margin: 0;
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-}
-
-
-.ticket-card-right {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content:
-        flex-end;
-
-    flex-wrap: wrap;
-
-    gap: 8px;
-
-}
-
-
-.ticket-date {
-
-    color:
-        var(--muted);
-
-    font-size:
-        11px;
-
-}
-
-
-.ticket-arrow {
-
-    width: 35px;
-
-    height: 35px;
-
-    display: grid;
-
-    place-items:
-        center;
-
-    border-radius:
-        10px;
-
-    background:
-        var(--primary-soft);
-
-    color:
-        var(--primary-dark);
-
-}
-
-
-/* ============================================
-   FORM NOVO CHAMADO
-============================================ */
-
-.create-ticket-layout {
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(
-            0,
-            1fr
-        )
-        320px;
-
-    gap: 24px;
-
-}
-
-
-.form-panel,
-.tips-panel {
-
-    background:
-        var(--surface);
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        20px;
-
-    box-shadow:
-        var(--shadow);
-
-}
-
-
-.form-panel {
-
-    padding: 28px;
-
-}
-
-
-.form-panel-header {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 14px;
-
-    margin-bottom: 25px;
-
-    padding-bottom: 20px;
-
-    border-bottom:
-        1px solid var(--border);
-
-}
-
-
-.form-panel-icon {
-
-    width: 52px;
-
-    height: 52px;
-
-    display: grid;
-
-    place-items: center;
-
-    border-radius:
-        14px;
-
-    background:
-        var(--primary-soft);
-
-}
-
-
-.form-panel-header h2 {
-
-    margin:
-        0 0 4px;
-
-    color:
-        var(--text);
-
-}
-
-
-.form-panel-header p {
-
-    margin: 0;
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-}
-
-
-.form-grid-2 {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            1fr
-        );
-
-    gap: 16px;
-
-    margin:
-        18px 0;
-
-}
-
-
-.textarea-meta {
-
-    display: flex;
-
-    justify-content:
-        space-between;
-
-    margin-top: 7px;
-
-}
-
-
-.textarea-meta small,
-.textarea-meta span {
-
-    color:
-        var(--muted);
-
-    font-size:
-        10px;
-
-}
-
-
-.form-actions-modern {
-
-    display: flex;
-
-    justify-content:
-        flex-end;
-
-    gap: 10px;
-
-    margin-top: 24px;
-
-    padding-top: 21px;
-
-    border-top:
-        1px solid var(--border);
-
-}
-
-
-.tips-panel {
-
-    height:
-        fit-content;
-
-    padding:
-        26px;
-
-    position:
-        sticky;
-
-    top:
-        100px;
-
-}
-
-
-.tips-panel-icon {
-
-    width: 50px;
-
-    height: 50px;
-
-    display: grid;
-
-    place-items: center;
-
-    margin-bottom:
-        16px;
-
-    border-radius:
-        14px;
-
-    background:
-        var(--primary-soft);
-
-}
-
-
-.tips-panel h3 {
-
-    color:
-        var(--text);
-
-}
-
-
-.tips-panel > p {
-
-    color:
-        var(--muted);
-
-    font-size:
-        12px;
-
-    line-height:
-        1.6;
-
-}
-
-
-.tip-item {
-
-    display: flex;
-
-    gap: 12px;
-
-    margin-top:
-        18px;
-
-}
-
-
-.tip-item > span {
 
     width: 34px;
 
@@ -1659,71 +685,257 @@ html.dark .user-avatar {
 
     flex-shrink: 0;
 
-    border-radius:
-        9px;
+    border-radius: 8px;
 
-    background:
-        var(--primary-soft);
+    background: var(--surface-secondary);
 
-    color:
-        var(--primary-dark);
+    border: 1px solid var(--border);
 
-    font-size:
-        10px;
+    color: var(--text-secondary);
 
-    font-weight:
-        800;
+    font-size: 11px;
+
+    font-weight: 700;
 
 }
 
 
-.tip-item strong {
+.stat-modern span {
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+}
+
+
+.stat-modern strong {
+
+    margin-top: 18px;
+
+    color: var(--text);
+
+    font-size: 30px;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    letter-spacing: -.03em;
+
+}
+
+
+/* =========================================
+   PANEL
+========================================= */
+
+.modern-panel {
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow);
+
+    transition:
+        background-color .2s ease,
+        border-color .2s ease;
+
+}
+
+
+.modern-panel-header {
+
+    min-height: 80px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 18px 20px;
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+
+.modern-panel-header h2 {
+
+    margin: 0 0 4px;
+
+    color: var(--text);
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+}
+
+
+.modern-panel-header p {
+
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+}
+
+
+.panel-link {
+
+    color: var(--primary);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================
+   TICKETS
+========================================= */
+
+.modern-ticket-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.modern-ticket-row {
+
+    min-height: 78px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 16px 20px;
+
+    border-bottom: 1px solid var(--border);
+
+    transition:
+        background-color .15s ease;
+
+}
+
+
+.modern-ticket-row:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.modern-ticket-row:hover {
+
+    background: var(--surface-hover);
+
+}
+
+
+.modern-ticket-main {
+
+    min-width: 0;
+
+}
+
+
+.ticket-protocol {
 
     display: block;
 
-    color:
-        var(--text);
+    margin-bottom: 4px;
 
-    font-size:
-        12px;
+    color: var(--text-muted);
 
-}
+    font-size: 10px;
 
-
-.tip-item p {
-
-    margin:
-        4px 0 0;
-
-    color:
-        var(--muted);
-
-    font-size:
-        11px;
+    font-weight: 600;
 
 }
 
 
-/* ============================================
+.modern-ticket-main h3 {
+
+    margin: 0 0 4px;
+
+    color: var(--text);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+}
+
+
+.modern-ticket-main p {
+
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+
+}
+
+
+.modern-ticket-tags {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    flex-wrap: wrap;
+
+    flex-shrink: 0;
+
+}
+
+
+/* =========================================
    TAGS
-============================================ */
+========================================= */
 
 .tag {
 
-    display:
-        inline-flex;
+    min-height: 26px;
 
-    padding:
-        7px 10px;
+    display: inline-flex;
 
-    border-radius:
-        999px;
+    align-items: center;
 
-    font-size:
-        11px;
+    padding: 0 9px;
 
-    font-weight:
-        700;
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
 
 }
 
@@ -1731,475 +943,202 @@ html.dark .user-avatar {
 .priority-low,
 .priority-normal {
 
-    background:
-        rgba(
-            37,
-            99,
-            235,
-            .10
-        );
+    background: var(--surface-secondary);
 
-    color:
-        #2563eb;
+    border: 1px solid var(--border);
+
+    color: var(--text-secondary);
 
 }
 
 
 .priority-high {
 
-    background:
-        rgba(
-            234,
-            88,
-            12,
-            .10
-        );
+    background: var(--warning-soft);
 
-    color:
-        #ea580c;
+    color: var(--warning);
 
 }
 
 
 .priority-urgent {
 
-    background:
-        rgba(
-            220,
-            38,
-            38,
-            .10
-        );
+    background: var(--danger-soft);
 
-    color:
-        #dc2626;
+    color: var(--danger);
 
 }
 
 
 .status-open {
 
-    background:
-        rgba(
-            217,
-            119,
-            6,
-            .10
-        );
+    background: var(--warning-soft);
 
-    color:
-        #d97706;
+    color: var(--warning);
 
 }
 
 
 .status-in_progress {
 
-    background:
-        rgba(
-            37,
-            99,
-            235,
-            .10
-        );
+    background: var(--primary-soft);
 
-    color:
-        #2563eb;
+    color: var(--primary);
 
 }
 
 
 .status-waiting {
 
-    background:
-        rgba(
-            147,
-            51,
-            234,
-            .10
-        );
+    background: var(--purple-soft);
 
-    color:
-        #9333ea;
+    color: var(--purple);
 
 }
 
 
 .status-resolved {
 
-    background:
-        rgba(
-            22,
-            163,
-            74,
-            .10
-        );
+    background: var(--success-soft);
 
-    color:
-        #16a34a;
+    color: var(--success);
 
 }
 
 
 .status-closed {
 
-    background:
-        rgba(
-            71,
-            85,
-            105,
-            .10
-        );
+    background: var(--surface-secondary);
 
-    color:
-        #64748b;
+    border: 1px solid var(--border);
+
+    color: var(--text-secondary);
 
 }
 
 
-html.dark .priority-low,
-html.dark .priority-normal {
+/* =========================================
+   ALERTS
+========================================= */
 
-    color:
-        #60a5fa;
+.alert {
 
-}
+    display: flex;
 
+    flex-direction: column;
 
-html.dark .status-open {
+    gap: 3px;
 
-    color:
-        #fbbf24;
+    margin-bottom: 18px;
 
-}
+    padding: 12px 14px;
 
+    border-radius: 9px;
 
-html.dark .status-waiting {
-
-    color:
-        #c084fc;
+    font-size: 11px;
 
 }
 
-
-html.dark .status-resolved {
-
-    color:
-        #4ade80;
-
-}
-
-
-/* ============================================
-   ALERTAS
-============================================ */
 
 .alert-success {
 
-    margin-bottom:
-        20px;
+    background: var(--success-soft);
 
-    padding:
-        14px 17px;
-
-    border:
-        1px solid #bbf7d0;
-
-    border-radius:
-        11px;
-
-    background:
-        #f0fdf4;
-
-    color:
-        #166534;
-
-}
-
-
-html.dark .alert-success {
-
-    border-color:
-        rgba(
-            74,
-            222,
-            128,
-            .22
-        );
-
-    background:
-        rgba(
-            34,
-            197,
-            94,
-            .08
-        );
-
-    color:
-        #86efac;
+    color: var(--success);
 
 }
 
 
 .alert-error {
 
-    margin-bottom:
-        20px;
+    background: var(--danger-soft);
 
-    padding:
-        14px 17px;
-
-    border:
-        1px solid #fecaca;
-
-    border-radius:
-        11px;
-
-    background:
-        #fef2f2;
-
-    color:
-        #991b1b;
+    color: var(--danger);
 
 }
 
 
-html.dark .alert-error {
+/* =========================================
+   EMPTY
+========================================= */
 
-    background:
-        rgba(
-            239,
-            68,
-            68,
-            .08
-        );
+.empty-state {
 
-    color:
-        #fca5a5;
+    padding: 45px 20px;
 
-    border-color:
-        rgba(
-            239,
-            68,
-            68,
-            .20
-        );
+    text-align: center;
 
 }
 
 
-.error-text {
+.empty-state-icon {
 
-    color:
-        #ef4444;
+    width: 42px;
 
-    font-size:
-        11px;
+    height: 42px;
 
-}
+    display: grid;
 
+    place-items: center;
 
-/* ============================================
-   ESTADO VAZIO
-============================================ */
+    margin: 0 auto 12px;
 
-.empty-box {
+    border-radius: 10px;
 
-    padding:
-        50px 20px;
+    background: var(--surface-secondary);
 
-    text-align:
-        center;
+    border: 1px solid var(--border);
+
+    color: var(--text-muted);
 
 }
 
 
-.empty-box-icon {
+.empty-state h3 {
 
-    width:
-        65px;
+    margin: 0 0 6px;
 
-    height:
-        65px;
+    color: var(--text);
 
-    display:
-        grid;
-
-    place-items:
-        center;
-
-    margin:
-        0 auto 15px;
-
-    border-radius:
-        18px;
-
-    background:
-        var(--primary-soft);
+    font-size: 14px;
 
 }
 
 
-.empty-box h3 {
+.empty-state p {
 
-    color:
-        var(--text);
+    margin: 0 0 16px;
 
-}
+    color: var(--text-secondary);
 
-
-.empty-box p {
-
-    color:
-        var(--muted);
+    font-size: 11px;
 
 }
 
 
-.pagination-box {
+/* =========================================
+   RESPONSIVE
+========================================= */
 
-    padding:
-        18px 24px;
-
-    border-top:
-        1px solid var(--border);
-
-}
-
-
-/* ============================================
-   RESPONSIVO
-============================================ */
-
-@media (
-    max-width:
-    1050px
-) {
-
-    .hero-dashboard {
-
-        grid-template-columns:
-            1fr;
-
-    }
+@media (max-width: 1000px) {
 
     .stats-grid-modern {
 
         grid-template-columns:
             repeat(
                 2,
-                1fr
+                minmax(0, 1fr)
             );
-
-    }
-
-    .filter-panel-grid {
-
-        grid-template-columns:
-            repeat(
-                2,
-                1fr
-            );
-
-    }
-
-    .field-search {
-
-        grid-column:
-            span 2;
-
-    }
-
-    .create-ticket-layout {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-    .tips-panel {
-
-        position:
-            static;
 
     }
 
 }
 
 
-@media (
-    max-width:
-    720px
-) {
+@media (max-width: 760px) {
 
-    .topbar {
-
-        height:
-            auto;
-
-    }
-
-    .topbar-container {
-
-        min-height:
-            70px;
-
-        flex-wrap:
-            wrap;
-
-    }
-
-    .menu-button {
-
-        display:
-            block;
-
-        margin-left:
-            auto;
-
-    }
-
-    .topbar-actions {
-
-        margin-left:
-            auto;
-
-    }
-
-    .main-nav {
-
-        width:
-            100%;
-
-        display:
-            none;
-
-        flex-direction:
-            column;
-
-        align-items:
-            stretch;
-
-        padding-bottom:
-            12px;
-
-    }
-
-    .main-nav.open {
-
-        display:
-            flex;
-
-    }
-
-    .main-nav a {
-
-        width:
-            100%;
-
-    }
-
-    .app-container {
+    .header-container,
+    .page-container {
 
         width:
             min(
@@ -2209,419 +1148,86 @@ html.dark .alert-error {
 
     }
 
-    .page-banner {
 
-        flex-direction:
-            column;
+    .desktop-nav,
+    .profile-info {
 
-        align-items:
-            flex-start;
-
-        padding:
-            26px 22px;
+        display: none;
 
     }
 
-    .page-banner-actions {
 
-        width:
-            100%;
+    .mobile-menu-button {
+
+        display: block;
+
+        margin-left: auto;
+
+        width: 38px;
+
+        height: 38px;
+
+        border: 1px solid var(--border);
+
+        border-radius: 8px;
+
+        background: var(--surface);
+
+        color: var(--text);
 
     }
 
-    .page-banner-actions a {
 
-        width:
-            100%;
+    .header-actions {
+
+        margin-left: auto;
 
     }
+
+
+    .page-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+    }
+
+
+    .page-header .btn-primary {
+
+        width: 100%;
+
+    }
+
 
     .stats-grid-modern {
 
-        grid-template-columns:
-            1fr;
-
-    }
-
-    .filter-panel-grid {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-    .field-search {
-
-        grid-column:
-            auto;
-
-    }
-
-    .filter-buttons {
-
-        flex-direction:
-            column;
-
-    }
-
-    .ticket-card {
-
-        flex-direction:
-            column;
-
-        align-items:
-            flex-start;
-
-    }
-
-    .ticket-card-right {
-
-        justify-content:
-            flex-start;
-
-    }
-
-    .form-grid-2 {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-    .form-actions-modern {
-
-        flex-direction:
-            column-reverse;
-
-    }
-
-    .form-actions-modern a,
-    .form-actions-modern button {
-
-        width:
-            100%;
-
-    }
-    /* ============================================
-   SHOW TICKET
-============================================ */
-
-.ticket-show-header {
-    margin-bottom: 24px;
-}
-
-.ticket-show-header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 18px;
-    flex-wrap: wrap;
-}
-
-.back-link {
-    color: var(--primary-dark);
-    font-weight: 700;
-    font-size: 14px;
-}
-
-.back-link:hover {
-    text-decoration: underline;
-}
-
-.ticket-show-badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.ticket-show-title-area {
-    padding: 28px 30px;
-    border-radius: 22px;
-    background:
-        radial-gradient(
-            circle at top right,
-            rgba(45, 212, 191, .18),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #14314c,
-            #0b5f6d,
-            #19b8aa
-        );
-    box-shadow:
-        0 18px 48px rgba(20, 60, 80, .14);
-}
-
-.ticket-protocol-large {
-    display: inline-block;
-    margin-bottom: 12px;
-    padding: 7px 12px;
-    border-radius: 999px;
-    background: rgba(255,255,255,.12);
-    color: #eafffb;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .08em;
-}
-
-.ticket-show-title {
-    margin: 0 0 10px;
-    color: white;
-    font-size: clamp(30px, 4vw, 46px);
-    line-height: 1.1;
-    letter-spacing: -1px;
-}
-
-.ticket-show-meta {
-    margin: 0;
-    color: rgba(255, 255, 255, .82);
-    line-height: 1.6;
-}
-
-.ticket-show-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 340px;
-    gap: 24px;
-    align-items: start;
-}
-
-.ticket-show-main {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.ticket-show-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.content-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-}
-
-.content-card-header {
-    padding: 22px 24px 16px;
-    border-bottom: 1px solid var(--border);
-}
-
-.content-card-header h2 {
-    margin: 0 0 4px;
-    color: var(--text);
-    font-size: 22px;
-}
-
-.content-card-header p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.description-box {
-    padding: 24px;
-    color: var(--text);
-    line-height: 1.8;
-    white-space: pre-line;
-}
-
-.comments-list {
-    padding: 22px 24px 0;
-}
-
-.comment-item {
-    display: flex;
-    gap: 14px;
-    margin-bottom: 18px;
-}
-
-.comment-avatar {
-    width: 42px;
-    height: 42px;
-    flex-shrink: 0;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: var(--primary-soft);
-    color: var(--primary-dark);
-    font-weight: 800;
-    font-size: 14px;
-}
-
-.comment-bubble {
-    flex: 1;
-    padding: 16px 18px;
-    border-radius: 16px;
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-}
-
-.comment-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-}
-
-.comment-top strong {
-    color: var(--text);
-    font-size: 14px;
-}
-
-.comment-top span {
-    color: var(--muted);
-    font-size: 12px;
-}
-
-.comment-bubble p {
-    margin: 0;
-    color: var(--text);
-    line-height: 1.7;
-    white-space: pre-line;
-}
-
-.empty-conversation {
-    padding: 36px 20px;
-    text-align: center;
-}
-
-.empty-conversation-icon {
-    width: 66px;
-    height: 66px;
-    margin: 0 auto 14px;
-    display: grid;
-    place-items: center;
-    border-radius: 18px;
-    background: var(--primary-soft);
-    font-size: 26px;
-}
-
-.empty-conversation h3 {
-    margin: 0 0 8px;
-    color: var(--text);
-}
-
-.empty-conversation p {
-    margin: 0;
-    color: var(--muted);
-}
-
-.reply-box {
-    padding: 0 24px 24px;
-}
-
-.reply-form {
-    padding-top: 14px;
-    border-top: 1px solid var(--border);
-}
-
-.reply-actions {
-    margin-top: 18px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.ticket-summary-list {
-    padding: 22px 24px;
-}
-
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.summary-item:last-child {
-    border-bottom: none;
-}
-
-.summary-item span {
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.summary-item strong {
-    color: var(--text);
-    font-size: 14px;
-    text-align: right;
-}
-
-.sidebar-card .ticket-update-form {
-    padding: 0 24px 24px;
-}
-
-.ticket-update-form .field + .field {
-    margin-top: 16px;
-}
-
-.sidebar-actions {
-    margin-top: 22px;
-    display: flex;
-    justify-content: stretch;
-}
-
-.sidebar-actions .btn-primary {
-    width: 100%;
-}
-
-/* ============================================
-   RESPONSIVO - SHOW TICKET
-============================================ */
-
-@media (max-width: 980px) {
-    .ticket-show-layout {
         grid-template-columns: 1fr;
-    }
-}
 
-@media (max-width: 720px) {
-    .ticket-show-title-area {
-        padding: 24px 20px;
     }
 
-    .content-card-header,
-    .description-box,
-    .comments-list,
-    .reply-box,
-    .ticket-summary-list,
-    .sidebar-card .ticket-update-form {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
 
-    .comment-item {
-        flex-direction: column;
-    }
+    .modern-panel-header {
 
-    .comment-avatar {
-        width: 38px;
-        height: 38px;
-    }
-
-    .reply-actions {
-        justify-content: stretch;
-    }
-
-    .reply-actions .btn-primary {
-        width: 100%;
-    }
-
-    .summary-item {
-        flex-direction: column;
         align-items: flex-start;
+
     }
 
-    .summary-item strong {
-        text-align: left;
+
+    .modern-ticket-row {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
     }
-}
+
+
+    .modern-ticket-tags {
+
+        width: 100%;
+
+    }
+
 }
