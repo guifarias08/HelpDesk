@@ -28,29 +28,7 @@
     </div>
 
 
-    <div class="page-heading-actions">
-
-        <div class="support-art">
-            <div class="support-art-lines">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <div class="support-art-icon">
-                ☎
-            </div>
-        </div>
-
-
-        <a
-            href="{{ route('tickets.create') }}"
-            class="btn btn-primary"
-        >
-            <span class="btn-icon">+</span>
-
-            Novo chamado
-        </a>
+ 
 
     </div>
 
