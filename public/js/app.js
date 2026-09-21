@@ -6,6 +6,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileButton = document.getElementById('profileButton');
     const profileMenu = document.getElementById('profileMenu');
     const progress = document.getElementById('routeProgress');
+    const pageLoader = document.getElementById('pageLoader');
+
+    const showPageLoader = () => {
+        if (!pageLoader) return;
+        pageLoader.classList.remove('is-leaving');
+        pageLoader.classList.add('is-active');
+        pageLoader.setAttribute('aria-hidden', 'false');
+    };
+
+    const hidePageLoader = () => {
+        if (!pageLoader) return;
+        pageLoader.classList.add('is-leaving');
+        pageLoader.setAttribute('aria-hidden', 'true');
+        window.setTimeout(() => pageLoader.classList.remove('is-active'), 320);
+    };
 
     const updateThemeButton = () => {
         if (!themeToggle) return;
@@ -68,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showProgress = () => {
         progress?.classList.remove('complete');
         progress?.classList.add('loading');
+        showPageLoader();
     };
 
     document.querySelectorAll('a[href]').forEach((link) => {
@@ -79,11 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('pageshow', () => {
         progress?.classList.remove('loading');
+        window.setTimeout(hidePageLoader, 1400);
         document.querySelectorAll('button[disabled][data-was-enabled]').forEach((button) => {
             button.disabled = false;
             button.removeAttribute('data-was-enabled');
         });
     });
+
+    window.setTimeout(hidePageLoader, 1400);
 
     document.querySelectorAll('form').forEach((form) => {
         form.addEventListener('submit', (event) => {

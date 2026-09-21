@@ -18,6 +18,15 @@
 <body>
     <a class="skip-link" href="#mainContent">Pular para o conteúdo</a>
     <div class="route-progress" id="routeProgress" aria-hidden="true"><span></span></div>
+    <div class="page-loader is-active" id="pageLoader" role="status" aria-label="Carregando página">
+        <div class="page-loader-mark" aria-hidden="true">
+            <span>H</span>
+            <i></i>
+            <i></i>
+        </div>
+        <strong>Carregando</strong>
+        <span class="page-loader-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    </div>
 
     <header class="topbar">
         <div class="topbar-inner">
