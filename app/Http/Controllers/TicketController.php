@@ -2,220 +2,142 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Ticket;
 use App\Models\Category;
+use App\Models\Ticket;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
     public function index(Request $request)
-{
-    $query = Ticket::with([
-        'user',
-        'category',
-        'assignedUser'
-    ]);
+    {
+        $query = $this->filteredQuery($request);
+        $sorts = [
+            'newest' => ['created_at', 'desc'],
+            'oldest' => ['created_at', 'asc'],
+            'priority' => ['priority', 'desc'],
+            'title' => ['title', 'asc'],
+        ];
+        [$column, $direction] = $sorts[$request->input('sort', 'newest')] ?? $sorts['newest'];
 
-    if ($request->filled('search')) {
+        if ($column === 'priority') {
+            $query->orderByRaw("CASE priority WHEN 'urgent' THEN 4 WHEN 'high' THEN 3 WHEN 'normal' THEN 2 ELSE 1 END {$direction}");
+        } else {
+            $query->orderBy($column, $direction);
+        }
 
-        $search = $request->search;
+        $tickets = $query->paginate(10)->withQueryString();
+        $categories = Category::orderBy('name')->get();
 
-        $query->where(function ($q) use ($search) {
-
-            $q->where(
-                'title',
-                'like',
-                "%{$search}%"
-            )
-            ->orWhere(
-                'protocol',
-                'like',
-                "%{$search}%"
-            );
-
-        });
+        return view('tickets.index', compact('tickets', 'categories'));
     }
 
-    if ($request->filled('status')) {
-        $query->where(
-            'status',
-            $request->status
-        );
+    public function board(Request $request)
+    {
+        $tickets = $this->filteredQuery($request)
+            ->orderByRaw("CASE priority WHEN 'urgent' THEN 4 WHEN 'high' THEN 3 WHEN 'normal' THEN 2 ELSE 1 END DESC")
+            ->latest('updated_at')
+            ->get()
+            ->groupBy('status');
+
+        $categories = Category::orderBy('name')->get();
+        $statuses = [
+            'open' => 'Abertos',
+            'in_progress' => 'Em atendimento',
+            'waiting' => 'Aguardando',
+            'resolved' => 'Resolvidos',
+            'closed' => 'Fechados',
+        ];
+
+        return view('tickets.board', compact('tickets', 'categories', 'statuses'));
     }
-
-    if ($request->filled('priority')) {
-        $query->where(
-            'priority',
-            $request->priority
-        );
-    }
-
-    if ($request->filled('category')) {
-        $query->where(
-            'category_id',
-            $request->category
-        );
-    }
-
-    $tickets = $query
-        ->latest()
-        ->paginate(10)
-        ->withQueryString();
-
-    $categories = Category::orderBy('name')->get();
-
-    return view(
-        'tickets.index',
-        compact(
-            'tickets',
-            'categories'
-        )
-    );
-}
-
 
     public function create()
     {
-        $categories =
-            Category::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
 
-        return view(
-            'tickets.create',
-            compact('categories')
-        );
+        return view('tickets.create', compact('categories'));
     }
-
 
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'title' => [
-            'required',
-            'string',
-            'max:255',
-        ],
-
-        'description' => [
-            'required',
-            'string',
-        ],
-
-        'category_id' => [
-            'nullable',
-            'exists:categories,id',
-        ],
-
-        'priority' => [
-            'required',
-            'in:low,normal,high,urgent',
-        ],
-    ]);
-   
-    // Usuário temporário enquanto o login não está configurado
-    $user = \App\Models\User::findOrFail(1);
-
-    $nextId = (Ticket::max('id') ?? 0) + 1;
-
-    $protocol = 'HD-'
-        . date('Y')
-        . '-'
-        . str_pad(
-            $nextId,
-            5,
-            '0',
-            STR_PAD_LEFT
-        );
-
-    $ticket = Ticket::create([
-        'title' => $validated['title'],
-
-        'description' => $validated['description'],
-
-        'category_id' =>
-            $validated['category_id'] ?? null,
-
-        'priority' => $validated['priority'],
-
-        'protocol' => $protocol,
-
-        'user_id' => $user->id,
-
-        'status' => 'open',
-    ]);
-
-    return redirect()
-        ->route('tickets.show', $ticket)
-        ->with(
-            'success',
-            'Chamado criado com sucesso!'
-        );
-}
-
-
-        public function show(Ticket $ticket)
     {
-        $ticket->load([
-            'user',
-            'category',
-            'assignedUser',
-            'comments.user',
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:5000'],
+            'category_id' => ['required', 'exists:categories,id'],
+            'priority' => ['required', 'in:low,normal,high,urgent'],
         ]);
 
-        $users = \App\Models\User::orderBy('name')->get();
+        $user = User::firstOrFail();
+        $nextId = (Ticket::max('id') ?? 0) + 1;
 
-        return view('tickets.show', compact(
-            'ticket',
-            'users'
-        ));
+        $ticket = Ticket::create([
+            ...$validated,
+            'protocol' => 'HD-'.date('Y').'-'.str_pad($nextId, 5, '0', STR_PAD_LEFT),
+            'user_id' => $user->id,
+            'status' => 'open',
+        ]);
+
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Chamado criado com sucesso.');
     }
 
-public function update(Request $request, Ticket $ticket)
-{
-    $validated = $request->validate([
-        'status' => [
-            'required',
-            'in:open,in_progress,waiting,resolved,closed',
-        ],
+    public function show(Ticket $ticket)
+    {
+        $ticket->load(['user', 'category', 'assignedUser', 'comments.user']);
+        $users = User::orderBy('name')->get();
 
-        'priority' => [
-            'required',
-            'in:low,normal,high,urgent',
-        ],
-
-        'assigned_to' => [
-            'nullable',
-            'exists:users,id',
-        ],
-    ]);
-
-    $ticket->status = $validated['status'];
-    $ticket->priority = $validated['priority'];
-    $ticket->assigned_to = $validated['assigned_to'] ?? null;
-
-    if ($validated['status'] === 'resolved') {
-        $ticket->resolved_at = now();
-    } else {
-        $ticket->resolved_at = null;
+        return view('tickets.show', compact('ticket', 'users'));
     }
 
-    $ticket->save();
+    public function update(Request $request, Ticket $ticket)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'in:open,in_progress,waiting,resolved,closed'],
+            'priority' => ['required', 'in:low,normal,high,urgent'],
+            'assigned_to' => ['nullable', 'exists:users,id'],
+        ]);
 
-    return redirect()
-        ->route('tickets.show', $ticket)
-        ->with('success', 'Chamado atualizado com sucesso!');
-}
+        $ticket->fill($validated);
+        $ticket->resolved_at = in_array($validated['status'], ['resolved', 'closed'], true)
+            ? ($ticket->resolved_at ?? now())
+            : null;
+        $ticket->save();
 
+        return redirect()->route('tickets.show', $ticket)
+            ->with('success', 'Chamado atualizado com sucesso.');
+    }
 
     public function destroy(Ticket $ticket)
     {
         $ticket->delete();
 
-        return redirect()
-            ->route('tickets.index')
-            ->with(
-                'success',
-                'Chamado removido.'
-            );
+        return redirect()->route('tickets.index')->with('success', 'Chamado removido.');
+    }
+
+    private function filteredQuery(Request $request): Builder
+    {
+        $query = Ticket::with(['user', 'category', 'assignedUser']);
+
+        if ($request->filled('search')) {
+            $search = trim((string) $request->search);
+            $query->where(fn (Builder $builder) => $builder
+                ->where('title', 'like', "%{$search}%")
+                ->orWhere('protocol', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%"));
+        }
+
+        foreach (['status', 'priority'] as $field) {
+            if ($request->filled($field)) {
+                $query->where($field, $request->input($field));
+            }
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->integer('category'));
+        }
+
+        return $query;
     }
 }
