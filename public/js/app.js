@@ -95,14 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('pageshow', () => {
         progress?.classList.remove('loading');
-        window.setTimeout(hidePageLoader, 1400);
+        window.setTimeout(hidePageLoader, 1300);
         document.querySelectorAll('button[disabled][data-was-enabled]').forEach((button) => {
             button.disabled = false;
             button.removeAttribute('data-was-enabled');
         });
     });
 
-    window.setTimeout(hidePageLoader, 1400);
+    window.setTimeout(hidePageLoader, 1300);
 
     document.querySelectorAll('form').forEach((form) => {
         form.addEventListener('submit', (event) => {
