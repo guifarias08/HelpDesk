@@ -1,426 +1,780 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login | HelpDesk Service Center</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <title>Login | HelpDesk</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --background: #06111f;
+            --surface: #0b1b2e;
+            --surface-light: #10243a;
+
+            --border: rgba(148, 163, 184, 0.16);
+
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+
+            --danger: #fb7185;
+            --success: #2dd4bf;
+        }
+
+        body {
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(59, 130, 246, .15),
+                    transparent 35%
+                ),
+                var(--background);
+
+            color: var(--text);
+        }
+
+        .page {
+            min-height: 100vh;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(400px, 1fr)
+                minmax(450px, 1fr);
+        }
+
+        /* LADO ESQUERDO */
+
+        .presentation {
+            padding: 60px 8%;
+
+            display: flex;
+            flex-direction: column;
+
+            border-right: 1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(13, 35, 57, .9),
+                    rgba(6, 17, 31, .9)
+                );
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #2563eb
+                );
+
+            font-size: 20px;
+            font-weight: 800;
+
+            box-shadow:
+                0 10px 30px
+                rgba(37, 99, 235, .25);
+        }
+
+        .logo strong {
+            display: block;
+
+            font-size: 20px;
+        }
+
+        .logo span {
+            display: block;
+
+            margin-top: 3px;
+
+            color: var(--text-secondary);
+
+            font-size: 9px;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+        }
+
+        .presentation-content {
+            margin: auto 0;
+
+            max-width: 620px;
+        }
+
+        .badge {
+            display: inline-block;
+
+            padding: 8px 13px;
+
+            margin-bottom: 25px;
+
+            border-radius: 999px;
+
+            border:
+                1px solid
+                rgba(59, 130, 246, .2);
+
+            background:
+                rgba(59, 130, 246, .1);
+
+            color: #60a5fa;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+        .presentation h1 {
+            font-size:
+                clamp(
+                    38px,
+                    5vw,
+                    65px
+                );
+
+            line-height: 1.05;
+
+            letter-spacing: -3px;
+        }
+
+        .presentation p {
+            margin-top: 25px;
+
+            max-width: 520px;
+
+            color: var(--text-secondary);
+
+            line-height: 1.7;
+
+            font-size: 15px;
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+
+            gap: 18px;
+
+            margin-top: 40px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+        }
+
+        .feature-icon {
+            width: 34px;
+            height: 34px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 9px;
+
+            background:
+                rgba(45, 212, 191, .08);
+
+            color: var(--success);
+        }
+
+        .feature span {
+            color: #cbd5e1;
+
+            font-size: 13px;
+        }
+
+        /* LOGIN */
+
+        .login-area {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 35px;
+        }
+
+        .login-card {
+            width: 100%;
+
+            max-width: 430px;
+
+            padding: 38px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 18px;
+
+            background:
+                rgba(11, 27, 46, .82);
+
+            box-shadow:
+                0 30px 80px
+                rgba(0, 0, 0, .3);
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            font-size: 27px;
+
+            letter-spacing: -.5px;
+        }
+
+        .login-header p {
+            margin-top: 8px;
+
+            color: var(--text-secondary);
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        .alert-error {
+            padding: 13px 14px;
+
+            margin-bottom: 20px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid
+                rgba(251, 113, 133, .2);
+
+            background:
+                rgba(251, 113, 133, .08);
+
+            color: #fda4af;
+
+            font-size: 12px;
+        }
+
+        .success {
+            padding: 13px;
+
+            margin-bottom: 20px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(45, 212, 191, .08);
+
+            border:
+                1px solid
+                rgba(45, 212, 191, .18);
+
+            color: #5eead4;
+
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #cbd5e1;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+        .input {
+            width: 100%;
+
+            height: 49px;
+
+            padding: 0 14px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid
+                rgba(148, 163, 184, .17);
+
+            outline: none;
+
+            background:
+                rgba(5, 17, 31, .7);
+
+            color: white;
+
+            font-size: 13px;
+
+            transition: .2s;
+        }
+
+        .input::placeholder {
+            color: #475569;
+        }
+
+        .input:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(59, 130, 246, .08);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper .input {
+            padding-right: 55px;
+        }
+
+        .show-password {
+            position: absolute;
+
+            right: 13px;
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #64748b;
+
+            cursor: pointer;
+
+            font-size: 12px;
+        }
+
+        .login-button {
+            width: 100%;
+
+            height: 50px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--primary-hover)
+                );
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 10px 30px
+                rgba(37, 99, 235, .25);
+
+            transition: .2s;
+        }
+
+        .login-button:hover {
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 14px 35px
+                rgba(37, 99, 235, .35);
+        }
+
+        .security {
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 10px;
+        }
+
+        @media (max-width: 900px) {
+
+            .page {
+                grid-template-columns: 1fr;
+            }
+
+            .presentation {
+                display: none;
+            }
+
+            .login-area {
+                min-height: 100vh;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .login-area {
+                padding: 20px;
+            }
+
+            .login-card {
+                padding: 25px;
+
+                border: none;
+
+                background: transparent;
+
+                box-shadow: none;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-<div class="login-page">
 
-    <div class="login-background">
-        <div class="glow glow-1"></div>
-        <div class="glow glow-2"></div>
-    </div>
+<div class="page">
 
-    <main class="login-wrapper">
 
-        {{-- LADO ESQUERDO --}}
-        <section class="login-brand">
+    {{-- Lado esquerdo --}}
 
-            <div class="brand">
+    <section class="presentation">
 
-                <div class="brand-logo">
-                    H
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                H
+            </div>
+
+            <div>
+
+                <strong>
+                    HelpDesk
+                </strong>
+
+                <span>
+                    Service Center
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="presentation-content">
+
+            <span class="badge">
+                Central de atendimento
+            </span>
+
+
+            <h1>
+
+                Suporte mais simples.
+
+                <br>
+
+                Atendimento mais rápido.
+
+            </h1>
+
+
+            <p>
+
+                Gerencie chamados, acompanhe atendimentos
+                e mantenha sua equipe organizada em um único sistema.
+
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <span>
+                        Gerenciamento centralizado de chamados
+                    </span>
+
                 </div>
 
-                <div>
-                    <h1>HelpDesk</h1>
-                    <span>Service Center</span>
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <span>
+                        Acompanhamento de prioridades e status
+                    </span>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <span>
+                        Ambiente protegido por autenticação
+                    </span>
+
                 </div>
 
             </div>
 
-            <div class="brand-content">
+        </div>
 
-                <span class="brand-badge">
-                    Central de atendimento
-                </span>
+
+    </section>
+
+
+    {{-- Login --}}
+
+    <section class="login-area">
+
+
+        <div class="login-card">
+
+
+            <div class="login-header">
 
                 <h2>
-                    Suporte mais simples.<br>
-                    Atendimento mais rápido.
+                    Bem-vindo
                 </h2>
 
                 <p>
-                    Gerencie chamados, acompanhe atendimentos
-                    e mantenha sua equipe organizada em um único lugar.
+                    Informe seu e-mail e senha para acessar o HelpDesk.
                 </p>
 
-                <div class="features">
+            </div>
 
-                    <div class="feature">
 
-                        <div class="feature-icon">
-                            ✓
-                        </div>
 
-                        <div>
-                            <strong>Gerenciamento centralizado</strong>
-                            <span>
-                                Acompanhe todos os chamados em tempo real.
-                            </span>
-                        </div>
 
-                    </div>
+            {{-- Erros --}}
 
-                    <div class="feature">
+            @if ($errors->any())
 
-                        <div class="feature-icon">
-                            ✓
-                        </div>
+                <div class="alert-error">
+
+                    @foreach ($errors->all() as $error)
 
                         <div>
-                            <strong>Controle de atendimentos</strong>
-                            <span>
-                                Prioridades, responsáveis e status organizados.
-                            </span>
+                            {{ $error }}
                         </div>
 
-                    </div>
-
-                    <div class="feature">
-
-                        <div class="feature-icon">
-                            ✓
-                        </div>
-
-                        <div>
-                            <strong>Ambiente seguro</strong>
-                            <span>
-                                Acesso restrito aos usuários autorizados.
-                            </span>
-                        </div>
-
-                    </div>
+                    @endforeach
 
                 </div>
 
-            </div>
-
-            <div class="brand-footer">
-                <span class="status-dot"></span>
-                Sistema operacional
-            </div>
-
-        </section>
+            @endif
 
 
-        {{-- LADO DIREITO --}}
-        <section class="login-area">
+            <form
+                action="{{ route('login.store') }}"
+                method="POST"
+            >
 
-            <div class="login-card">
+                @csrf
 
-                <div class="mobile-brand">
 
-                    <div class="brand-logo">
-                        H
-                    </div>
+                {{-- Email --}}
 
-                    <div>
-                        <strong>HelpDesk</strong>
-                        <span>Service Center</span>
-                    </div>
+                <div class="form-group">
+
+                    <label for="email">
+
+                        E-mail
+
+                    </label>
+
+
+                    <input
+                        class="input"
+                        type="email"
+                        name="email"
+                        id="email"
+                        value="{{ old('email') }}"
+                        placeholder="admin@helpdesk.com"
+                        autocomplete="email"
+                        autofocus
+                        required
+                    >
 
                 </div>
 
 
-                <div class="login-header">
+                {{-- Senha --}}
 
-                    <div class="login-icon">
+                <div class="form-group">
 
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                    <label for="password">
+
+                        Senha
+
+                    </label>
+
+
+                    <div class="password-wrapper">
+
+                        <input
+                            class="input"
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="Digite sua senha"
+                            autocomplete="current-password"
+                            required
                         >
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
-                            <polyline points="10 17 15 12 10 7"/>
-                            <line x1="15" x2="3" y1="12" y2="12"/>
-                        </svg>
+
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            id="showPassword"
+                        >
+
+                            Mostrar
+
+                        </button>
 
                     </div>
-
-                    <h1>Bem-vindo de volta</h1>
-
-                    <p>
-                        Entre com suas credenciais para acessar o HelpDesk.
-                    </p>
 
                 </div>
 
 
-                {{-- ERRO GERAL --}}
-                @if ($errors->any())
-
-                    <div class="alert-error">
-
-                        <div class="alert-icon">!</div>
-
-                        <div>
-                            <strong>Não foi possível entrar</strong>
-
-                            <span>
-                                Verifique seu e-mail e senha e tente novamente.
-                            </span>
-                        </div>
-
-                    </div>
-
-                @endif
-
-
-                <form
-                    method="POST"
-                    action="{{ route('login.store') }}"
-                    class="login-form"
+                <button
+                    class="login-button"
+                    type="submit"
                 >
 
-                    @csrf
+                    Entrar no sistema →
+
+                </button>
 
 
-                    {{-- EMAIL --}}
-                    <div class="form-group">
-
-                        <label for="email">
-                            E-mail
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <span class="input-icon">
-
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="19"
-                                    height="19"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                >
-                                    <rect width="20" height="16" x="2" y="4" rx="2"/>
-                                    <path d="m22 7-10 5L2 7"/>
-                                </svg>
-
-                            </span>
-
-                            <input
-                                type="email"
-                                name="email"
-                                id="email"
-                                value="{{ old('email') }}"
-                                placeholder="seuemail@empresa.com"
-                                autocomplete="email"
-                                autofocus
-                                required
-                            >
-
-                        </div>
-
-                        @error('email')
-                            <span class="field-error">
-                                {{ $message }}
-                            </span>
-                        @enderror
-
-                    </div>
+            </form>
 
 
-                    {{-- SENHA --}}
-                    <div class="form-group">
+            <div class="security">
 
-                        <div class="label-row">
-
-                            <label for="password">
-                                Senha
-                            </label>
-
-                            @if (Route::has('password.request'))
-
-                                <a
-                                    href="{{ route('password.request') }}"
-                                    class="forgot-link"
-                                >
-                                    Esqueceu a senha?
-                                </a>
-
-                            @endif
-
-                        </div>
-
-                        <div class="input-wrapper">
-
-                            <span class="input-icon">
-
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="19"
-                                    height="19"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                >
-                                    <rect width="18" height="11" x="3" y="11" rx="2"/>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                                </svg>
-
-                            </span>
-
-                            <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                placeholder="Digite sua senha"
-                                autocomplete="current-password"
-                                required
-                            >
-
-                            <button
-                                type="button"
-                                class="password-toggle"
-                                id="passwordToggle"
-                                aria-label="Mostrar senha"
-                            >
-
-                                <svg
-                                    id="eyeIcon"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="19"
-                                    height="19"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                >
-                                    <path d="M2.062 12.348a1 1 0 0 1 0-.696C3.468 7.48 7.395 5 12 5c4.605 0 8.532 2.48 9.938 6.652a1 1 0 0 1 0 .696C20.532 16.52 16.605 19 12 19c-4.605 0-8.532-2.48-9.938-6.652"/>
-                                    <circle cx="12" cy="12" r="3"/>
-                                </svg>
-
-                            </button>
-
-                        </div>
-
-                        @error('password')
-                            <span class="field-error">
-                                {{ $message }}
-                            </span>
-                        @enderror
-
-                    </div>
-
-
-                    {{-- LEMBRAR --}}
-                    <div class="remember-row">
-
-                        <label class="checkbox">
-
-                            <input
-                                type="checkbox"
-                                name="remember"
-                                id="remember"
-                            >
-
-                            <span class="checkbox-box"></span>
-
-                            Manter conectado
-
-                        </label>
-
-                    </div>
-
-
-                    {{-- BOTÃO --}}
-                    <button
-                        type="submit"
-                        class="login-button"
-                    >
-
-                        <span>Entrar no sistema</span>
-
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path d="M5 12h14"/>
-                            <path d="m13 6 6 6-6 6"/>
-                        </svg>
-
-                    </button>
-
-                </form>
-
-
-                <div class="login-security">
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3z"/>
-                        <path d="m9 12 2 2 4-4"/>
-                    </svg>
-
-                    Acesso seguro e protegido
-
-                </div>
+                🔒 Acesso seguro ao HelpDesk
 
             </div>
 
-            <footer class="login-footer">
-                © {{ date('Y') }} HelpDesk Service Center
-            </footer>
 
-        </section>
+        </div>
 
-    </main>
+
+    </section>
+
 
 </div>
 
 
 <script>
 
-    const password = document.getElementById('password');
-    const toggle = document.getElementById('passwordToggle');
+    const password =
+        document.getElementById('password');
 
-    toggle.addEventListener('click', () => {
+    const showPassword =
+        document.getElementById('showPassword');
 
-        const isPassword = password.type === 'password';
 
-        password.type = isPassword ? 'text' : 'password';
+    showPassword.addEventListener(
+        'click',
+        function () {
 
-        toggle.classList.toggle('active', isPassword);
+            if (password.type === 'password') {
 
-        toggle.setAttribute(
-            'aria-label',
-            isPassword ? 'Ocultar senha' : 'Mostrar senha'
-        );
+                password.type = 'text';
 
-    });
+                showPassword.textContent =
+                    'Ocultar';
+
+            } else {
+
+                password.type = 'password';
+
+                showPassword.textContent =
+                    'Mostrar';
+
+            }
+
+        }
+    );
 
 </script>
 
+
 </body>
+
 </html>

@@ -1,23 +1,36 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TicketCommentController;
 use App\Http\Controllers\TicketController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
+
+/*
+|--------------------------------------------------------------------------
+| Página inicial
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return redirect()->route('login');
+
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/tickets/board', [TicketController::class, 'board'])->name('tickets.board');
-Route::post('/tickets/{ticket}/comments', [TicketCommentController::class, 'store'])
-    ->name('tickets.comments.store');
-Route::resource('tickets', TicketController::class)->except(['edit']);
-Route::resource('categories', CategoryController::class)
-    ->only(['index', 'store', 'update', 'destroy']);
+
+/*
+|--------------------------------------------------------------------------
+| Rotas para visitantes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('guest')->group(function () {
 
@@ -26,6 +39,7 @@ Route::middleware('guest')->group(function () {
         'create'
     ])->name('login');
 
+
     Route::post('/login', [
         AuthenticatedSessionController::class,
         'store'
@@ -33,14 +47,69 @@ Route::middleware('guest')->group(function () {
 
 });
 
+
+/*
+|--------------------------------------------------------------------------
+| Rotas protegidas
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard', function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
 
-        return view('dashboard');
+    Route::get('/dashboard', [
+        DashboardController::class,
+        'index'
+    ])->name('dashboard');
 
-    })->name('dashboard');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Chamados
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/tickets/board', [
+        TicketController::class,
+        'board'
+    ])->name('tickets.board');
+
+
+    Route::post('/tickets/{ticket}/comments', [
+        TicketCommentController::class,
+        'store'
+    ])->name('tickets.comments.store');
+
+
+    Route::resource('tickets', TicketController::class)
+        ->except(['edit']);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Categorias
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('categories', CategoryController::class)
+        ->only([
+            'index',
+            'store',
+            'update',
+            'destroy'
+        ]);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logout
+    |--------------------------------------------------------------------------
+    */
 
     Route::post('/logout', [
         AuthenticatedSessionController::class,
